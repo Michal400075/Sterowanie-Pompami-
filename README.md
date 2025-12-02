@@ -18,6 +18,7 @@ wątki
 
 pod systemy 
 
+analizy 
 
 
 
