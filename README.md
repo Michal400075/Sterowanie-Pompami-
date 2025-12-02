@@ -16,6 +16,8 @@ system
 wejsci wyjscia
 wątki 
 
+pod systemy 
+
 
 
 
