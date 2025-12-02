@@ -20,5 +20,6 @@ pod systemy
 
 analizy 
 
+diagrammm instancje 
 
 
