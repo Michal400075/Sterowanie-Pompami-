@@ -100,5 +100,30 @@ Zawiera podprocesy:
 
 
 # Proponowane metody analizy modelu w OSATE oraz wyniki
+Model zawiera pełną specyfikację przepływów umożliwiającą analizę pełnego przepływu.
+Analiza przepływu pełnego (End-to-End Flows):
+Poprzez implementację informacji dotyczących przepływu w urządzeniach wejściowych, wątkach oraz urządzeniach wyjściowych przeprowadzono analizę pełnego przepływu dla czterech wybranych ścieżek przepływu danych:
+
+Ścieżka sterowania pompą CO - Termostaty -> Modbus -> ECU/CHPumpController -> Modbus -> Pompa CO - Oczekiwany czas: 50-250ms
+Ścieżka sterowania pompą CWU - Czujnik bojlera -> Modbus -> ECU/DHWPumpController -> Modbus -> Pompa CWU - Oczekiwany czas: 50-250ms
+Ścieżka sterowania pompą cyrkulacyjną - Panel trybu -> Modbus -> ECU/CirculationPumpController -> Modbus -> Pompa PO - Oczekiwany czas: 100-600ms
+Ścieżka alarmowa - Czujniki -> Modbus -> ECU/MonitoringLogic -> Modbus -> Alarm - Oczekiwany czas: 200-1200ms
+
+Ustawienia analizy przepływu danych:
+
+Typ systemu: asynchroniczny
+Najgorszy czas przetwarzania: maksymalny czas wykonania obliczeń
+Czas kolejkowania: wyłączony
 
 # Literatura
+SAE International, "AS5506C: Architecture Analysis & Design Language (AADL)," SAE International Standard, 2017. Available: https://www.sae.org/standards/content/as5506c/
+
+P. H. Feiler and D. P. Gluch, Model-Based Engineering with AADL: An Introduction to the SAE Architecture Analysis & Design Language, Addison-Wesley Professional, 2012. ISBN: 978-0321888945
+
+OSATE 2 - Open Source AADL Tool Environment. Available: https://osate.org/
+
+Modbus Organization, "Modbus Application Protocol Specification V1.1b3," 2012. Available: https://modbus.org/
+
+ASHRAE, "HVAC Systems and Equipment Handbook," American Society of Heating, Refrigerating and Air-Conditioning Engineers, 2020.
+
+EN 12828:2012, "Heating systems in buildings - Design for water-based heating systems," European Standard.
