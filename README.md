@@ -105,8 +105,11 @@ Analiza przepływu pełnego (End-to-End Flows):
 Poprzez implementację informacji dotyczących przepływu w urządzeniach wejściowych, wątkach oraz urządzeniach wyjściowych przeprowadzono analizę pełnego przepływu dla czterech wybranych ścieżek przepływu danych:
 
 Ścieżka sterowania pompą CO - Termostaty -> Modbus -> ECU/CHPumpController -> Modbus -> Pompa CO - Oczekiwany czas: 50-250ms
+
 Ścieżka sterowania pompą CWU - Czujnik bojlera -> Modbus -> ECU/DHWPumpController -> Modbus -> Pompa CWU - Oczekiwany czas: 50-250ms
-Ścieżka sterowania pompą cyrkulacyjną - Panel trybu -> Modbus -> ECU/CirculationPumpController -> Modbus -> Pompa PO - Oczekiwany czas: 100-600ms
+
+Ścieżka sterowania pompą cyrkulacyjną - Panel trybu -> Modbus -> ECU/CirculationPumpController -> Modbus -> Pompa cyrkulacji - Oczekiwany czas: 100-600ms
+
 Ścieżka alarmowa - Czujniki -> Modbus -> ECU/MonitoringLogic -> Modbus -> Alarm - Oczekiwany czas: 200-1200ms
 
 Ustawienia analizy przepływu danych:
