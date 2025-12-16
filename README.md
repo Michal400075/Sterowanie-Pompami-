@@ -21,11 +21,11 @@ System działa w oparciu o magistralę Modbus, gdzie wszystkie urządzenia komun
 
 # Spis komponentów AADL z komentarzem
 1. Dane (data)
-•	PumpCommand – polecenia sterujące pompami.
-•	TemperatureData – dane temperatur z czujników.
-•	FlowData – dane przepływu z czujnika przepływu.
-•	SystemStatus – tryb pracy i status alarmowy.
-•	ConfigData – konfiguracja dostępna dla wątków sterowania.
+•	PumpCommand – polecenia sterujące pompami.;
+•	TemperatureData – dane temperatur z czujników.;
+•	FlowData – dane przepływu z czujnika przepływu.;
+•	SystemStatus – tryb pracy i status alarmowy.;
+•	ConfigData – konfiguracja dostępna dla wątków sterowania.;
 
 2. Czujniki (device – wejściowe)
 •	BoilerTempSensor – czujnik temperatury kotła.
