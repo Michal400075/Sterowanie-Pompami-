@@ -37,8 +37,8 @@ System działa w oparciu o magistralę Modbus, gdzie wszystkie urządzenia komun
 
 •	ConfigData – konfiguracja dostępna dla wątków sterowania.;
 
-3. Czujniki (device – wejściowe)
-4. 
+2. Czujniki (device – wejściowe)
+ 
 •	BoilerTempSensor – czujnik temperatury kotła.
 
 •	DHWTankTempSensor – czujnik temperatury zasobnika C.W.U.
@@ -51,7 +51,7 @@ System działa w oparciu o magistralę Modbus, gdzie wszystkie urządzenia komun
 
 •	ModeSwitchPanel – panel trybów pracy systemu.
 
-6. Urządzenia wykonawcze (device – wyjściowe)
+3. Urządzenia wykonawcze (device – wyjściowe)
    
 •	CHPumpUnit – pompa obiegu C.O.
 
@@ -61,7 +61,7 @@ System działa w oparciu o magistralę Modbus, gdzie wszystkie urządzenia komun
 
 •	AlarmIndicator – sygnalizator stanu alarmowego.
 
-8. Proces (process)
+4. Proces (process)
    
 HeatingPumpControlProcess – główny proces odpowiedzialny za całą logikę systemu.
 
@@ -77,19 +77,19 @@ Zawiera podprocesy:
 
 •	ConfigDataStore – pamięć konfiguracji dla wątków sterujących.
 
-10. Procesor (processor)
+5. Procesor (processor)
 
 •	HeatingControlECU – jednostka obliczeniowa systemu.
 
-12. Pamięć (memory)
+6. Pamięć (memory)
     
 •	ECUMemory – pamięć sterownika przechowująca dane i konfigurację.
 
-14. Magistrala (bus)
+7. Magistrala (bus)
     
 •	ModbusBus – magistrala komunikacyjna używana przez czujniki, urządzania wykonawcze i sterownik.
 
-16. System główny (system)
+8. System główny (system)
     
 •	HomeHeatingPumpControl – integruje całą architekturę oraz połączenia pomiędzy czujnikami, aktuatorami, procesem i zasobami sprzętowymi.
 
