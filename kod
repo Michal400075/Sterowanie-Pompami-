@@ -1,0 +1,310 @@
+package HeatingPumpControl
+public
+  
+  -- =========================================
+  -- DEFINICJE TYPÓW DANYCH
+  -- =========================================
+  
+  data PumpCommand
+  end PumpCommand;
+  
+  data TemperatureData
+  end TemperatureData;
+  
+  data FlowData
+  end FlowData;
+  
+  data SystemStatus
+  end SystemStatus;
+  
+  data ConfigData
+  end ConfigData;
+  
+  -- =========================================
+  -- URZĄDZENIA WEJŚCIOWE (SENSORS)
+  -- =========================================
+  
+  device BoilerTempSensor
+    features
+      temp_out: out data port TemperatureData;
+      power: requires bus access ModbusBus;
+  end BoilerTempSensor;
+  
+  device implementation BoilerTempSensor.impl
+  end BoilerTempSensor.impl;
+  
+  device DHWTankTempSensor
+    features
+      temp_out: out data port TemperatureData;
+      power: requires bus access ModbusBus;
+  end DHWTankTempSensor;
+  
+  device implementation DHWTankTempSensor.impl
+  end DHWTankTempSensor.impl;
+  
+  device RadiatorTempSensor
+    features
+      temp_out: out data port TemperatureData;
+      power: requires bus access ModbusBus;
+  end RadiatorTempSensor;
+  
+  device implementation RadiatorTempSensor.impl
+  end RadiatorTempSensor.impl;
+  
+  device RoomThermostat
+    features
+      temp_setpoint: out data port TemperatureData;
+      power: requires bus access ModbusBus;
+  end RoomThermostat;
+  
+  device implementation RoomThermostat.impl
+  end RoomThermostat.impl;
+  
+  device FlowSensor
+    features
+      flow_out: out data port FlowData;
+      power: requires bus access ModbusBus;
+  end FlowSensor;
+  
+  device implementation FlowSensor.impl
+  end FlowSensor.impl;
+  
+  device ModeSwitchPanel
+    features
+      mode_out: out data port SystemStatus;
+      power: requires bus access ModbusBus;
+  end ModeSwitchPanel;
+  
+  device implementation ModeSwitchPanel.impl
+  end ModeSwitchPanel.impl;
+  
+  -- =========================================
+  -- URZĄDZENIA WYJŚCIOWE (ACTUATORS)
+  -- =========================================
+  
+  device CHPumpUnit
+    features
+      command_in: in data port PumpCommand;
+      power: requires bus access ModbusBus;
+  end CHPumpUnit;
+  
+  device implementation CHPumpUnit.impl
+  end CHPumpUnit.impl;
+  
+  device DHWPumpUnit
+    features
+      command_in: in data port PumpCommand;
+      power: requires bus access ModbusBus;
+  end DHWPumpUnit;
+  
+  device implementation DHWPumpUnit.impl
+  end DHWPumpUnit.impl;
+  
+  device CirculationPumpUnit
+    features
+      command_in: in data port PumpCommand;
+      power: requires bus access ModbusBus;
+  end CirculationPumpUnit;
+  
+  device implementation CirculationPumpUnit.impl
+  end CirculationPumpUnit.impl;
+  
+  device AlarmIndicator
+    features
+      alarm_in: in data port SystemStatus;
+      power: requires bus access ModbusBus;
+  end AlarmIndicator;
+  
+  device implementation AlarmIndicator.impl
+  end AlarmIndicator.impl;
+  
+  -- =========================================
+  -- WĄTKI (THREADS)
+  -- =========================================
+  
+  thread CHPumpController
+    features
+      boiler_temp: in data port TemperatureData;
+      radiator_temp: in data port TemperatureData;
+      room_setpoint: in data port TemperatureData;
+      flow_data: in data port FlowData;
+      ch_pump_cmd: out data port PumpCommand;
+      config_access: requires data access ConfigData;
+  end CHPumpController;
+  
+  thread implementation CHPumpController.impl
+  end CHPumpController.impl;
+  
+  thread DHWPumpController
+    features
+      boiler_temp: in data port TemperatureData;
+      tank_temp: in data port TemperatureData;
+      dhw_pump_cmd: out data port PumpCommand;
+      config_access: requires data access ConfigData;
+  end DHWPumpController;
+  
+  thread implementation DHWPumpController.impl
+  end DHWPumpController.impl;
+  
+  thread CirculationPumpController
+    features
+      tank_temp: in data port TemperatureData;
+      mode_input: in data port SystemStatus;
+      circ_pump_cmd: out data port PumpCommand;
+      config_access: requires data access ConfigData;
+  end CirculationPumpController;
+  
+  thread implementation CirculationPumpController.impl
+  end CirculationPumpController.impl;
+  
+  thread MonitoringLogic
+    features
+      boiler_temp: in data port TemperatureData;
+      tank_temp: in data port TemperatureData;
+      radiator_temp: in data port TemperatureData;
+      flow_data: in data port FlowData;
+      alarm_status: out data port SystemStatus;
+      config_access: requires data access ConfigData;
+  end MonitoringLogic;
+  
+  thread implementation MonitoringLogic.impl
+  end MonitoringLogic.impl;
+  
+  -- =========================================
+  -- PROCES (PROCESS)
+  -- =========================================
+  
+  process HeatingPumpControlProcess
+    features
+      boiler_temp_in: in data port TemperatureData;
+      tank_temp_in: in data port TemperatureData;
+      radiator_temp_in: in data port TemperatureData;
+      room_setpoint_in: in data port TemperatureData;
+      flow_in: in data port FlowData;
+      mode_in: in data port SystemStatus;
+      ch_pump_out: out data port PumpCommand;
+      dhw_pump_out: out data port PumpCommand;
+      circ_pump_out: out data port PumpCommand;
+      alarm_out: out data port SystemStatus;
+  end HeatingPumpControlProcess;
+  
+  process implementation HeatingPumpControlProcess.impl
+    subcomponents
+      CHPumpThread: thread CHPumpController.impl;
+      DHWPumpThread: thread DHWPumpController.impl;
+      CircPumpThread: thread CirculationPumpController.impl;
+      MonitoringThread: thread MonitoringLogic.impl;
+      ConfigDataStore: data ConfigData;
+      
+    connections
+      c1: port boiler_temp_in -> CHPumpThread.boiler_temp;
+      c2: port radiator_temp_in -> CHPumpThread.radiator_temp;
+      c3: port room_setpoint_in -> CHPumpThread.room_setpoint;
+      c4: port flow_in -> CHPumpThread.flow_data;
+      c5: port CHPumpThread.ch_pump_cmd -> ch_pump_out;
+      c6: port boiler_temp_in -> DHWPumpThread.boiler_temp;
+      c7: port tank_temp_in -> DHWPumpThread.tank_temp;
+      c8: port DHWPumpThread.dhw_pump_cmd -> dhw_pump_out;
+      c9: port tank_temp_in -> CircPumpThread.tank_temp;
+      c10: port mode_in -> CircPumpThread.mode_input;
+      c11: port CircPumpThread.circ_pump_cmd -> circ_pump_out;
+      c12: port boiler_temp_in -> MonitoringThread.boiler_temp;
+      c13: port tank_temp_in -> MonitoringThread.tank_temp;
+      c14: port radiator_temp_in -> MonitoringThread.radiator_temp;
+      c15: port flow_in -> MonitoringThread.flow_data;
+      c16: port MonitoringThread.alarm_status -> alarm_out;
+      d1: data access ConfigDataStore -> CHPumpThread.config_access;
+      d2: data access ConfigDataStore -> DHWPumpThread.config_access;
+      d3: data access ConfigDataStore -> CircPumpThread.config_access;
+      d4: data access ConfigDataStore -> MonitoringThread.config_access;
+  end HeatingPumpControlProcess.impl;
+  
+  -- =========================================
+  -- PROCESOR (PROCESSOR)
+  -- =========================================
+  
+  processor HeatingControlECU
+    features
+      bus_access: requires bus access ModbusBus;
+  end HeatingControlECU;
+  
+  processor implementation HeatingControlECU.impl
+  end HeatingControlECU.impl;
+  
+  -- =========================================
+  -- PAMIĘĆ (MEMORY)
+  -- =========================================
+  
+  memory ECUMemory
+    features
+      bus_access: requires bus access ModbusBus;
+  end ECUMemory;
+  
+  memory implementation ECUMemory.impl
+  end ECUMemory.impl;
+  
+  -- =========================================
+  -- SZYNA KOMUNIKACYJNA (BUS)
+  -- =========================================
+  
+  bus ModbusBus
+  end ModbusBus;
+  
+  bus implementation ModbusBus.impl
+  end ModbusBus.impl;
+  
+  -- =========================================
+  -- SYSTEM GŁÓWNY
+  -- =========================================
+  
+  system HomeHeatingPumpControl
+  end HomeHeatingPumpControl;
+  
+  system implementation HomeHeatingPumpControl.impl
+    subcomponents
+      BoilerSensor: device BoilerTempSensor.impl;
+      TankSensor: device DHWTankTempSensor.impl;
+      RadiatorSensor: device RadiatorTempSensor.impl;
+      Thermostat: device RoomThermostat.impl;
+      FlowMeter: device FlowSensor.impl;
+      ModePanel: device ModeSwitchPanel.impl;
+      CHPump: device CHPumpUnit.impl;
+      DHWPump: device DHWPumpUnit.impl;
+      CircPump: device CirculationPumpUnit.impl;
+      Alarm: device AlarmIndicator.impl;
+      ControlProcess: process HeatingPumpControlProcess.impl;
+      MainECU: processor HeatingControlECU.impl;
+      MainMemory: memory ECUMemory.impl;
+      MainBus: bus ModbusBus.impl;
+      
+    connections
+      s1: port BoilerSensor.temp_out -> ControlProcess.boiler_temp_in;
+      s2: port TankSensor.temp_out -> ControlProcess.tank_temp_in;
+      s3: port RadiatorSensor.temp_out -> ControlProcess.radiator_temp_in;
+      s4: port Thermostat.temp_setpoint -> ControlProcess.room_setpoint_in;
+      s5: port FlowMeter.flow_out -> ControlProcess.flow_in;
+      s6: port ModePanel.mode_out -> ControlProcess.mode_in;
+      p1: port ControlProcess.ch_pump_out -> CHPump.command_in;
+      p2: port ControlProcess.dhw_pump_out -> DHWPump.command_in;
+      p3: port ControlProcess.circ_pump_out -> CircPump.command_in;
+      p4: port ControlProcess.alarm_out -> Alarm.alarm_in;
+      b1: bus access MainBus <-> BoilerSensor.power;
+      b2: bus access MainBus <-> TankSensor.power;
+      b3: bus access MainBus <-> RadiatorSensor.power;
+      b4: bus access MainBus <-> Thermostat.power;
+      b5: bus access MainBus <-> FlowMeter.power;
+      b6: bus access MainBus <-> ModePanel.power;
+      b7: bus access MainBus <-> CHPump.power;
+      b8: bus access MainBus <-> DHWPump.power;
+      b9: bus access MainBus <-> CircPump.power;
+      b10: bus access MainBus <-> Alarm.power;
+      b11: bus access MainBus <-> MainECU.bus_access;
+      b12: bus access MainBus <-> MainMemory.bus_access;
+      
+    properties
+      Actual_Processor_Binding => (reference (MainECU)) applies to ControlProcess;
+      Actual_Memory_Binding => (reference (MainMemory)) applies to ControlProcess;
+      
+  end HomeHeatingPumpControl.impl;
+  
+end HeatingPumpControl;
