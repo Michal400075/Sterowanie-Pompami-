@@ -95,6 +95,9 @@ Zawiera podprocesy:
 
 # Model – rysunek
 
+![schemat](https://github.com/user-attachments/assets/b9953831-c533-4ef8-b910-ac387a091e91)
+
+
 
 # Proponowane metody analizy modelu w OSATE oraz wyniki
 
